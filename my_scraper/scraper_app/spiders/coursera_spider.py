@@ -1,47 +1,43 @@
-from scrapy.spider import BaseSpider
-from scrapy.selector import HtmlXPathSelector
-from scrapy.contrib.loader import XPathItemLoader
-from scrapy.contrib.loader.processor import Join, MapCompose
+# import lxml.html as lh
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import time
+# import io
+from items import Course
 
-from scraper_app.items import Course
+browser = webdriver.Firefox()
+# browser.get('file:///Users/penelopehill/Desktop/test.html')
+browser.get('https://www.coursera.org/courses?languages=en')
 
-class CourseraSpider(BaseSpider):
-    name = "coursera"
-    allowed_domains = ["coursera.com"]
-    start_urls = ["https://www.coursera.org/courses?languages=en"]
+time.sleep(10)
 
-    course_list_xpath = ''
+elem = browser.find_element_by_xpath("//*")
+content = elem.get_attribute("innerHTML")
 
-    item_fields = { 
-        'organization':  '//div[@class="c-courseList-entry-university"/a/text()'
-        'title': ''
-        'author': ''
-        'start_date': ''
-        'duration': ''
-    }
+# source_code = lh.fromstring(content)
+soup = BeautifulSoup(content)
 
+# print content
+# print "test"
 
-    def parse(self, response):
-        """
-        Default callback used by Scrapy to process downloaded responses
+# content = browser.page_source
+browser.quit()
 
-        Testing contracts:
-        @url http://www.livingsocial.com/cities/15-san-francisco
-        @returns items 1
-        @scrapes title link
+course_blocks = soup.find_all("div", "c-courseList-entry")
+# print course_blocks
 
-        """
-        selector = HtmlXPathSelector(response)
+new_titles = []
 
-        # iterate over deals
-        for course in selector.xpath(self.course_list_xpath):
-            loader = XPathItemLoader(Course(), selector=course)
+for course in course_blocks: 
+    organization = course.find("div", "c-courseList-entry-university").find('a').get_text()
+    title = course.find("div", "c-courseList-entry-title").find('a').get_text()
+    authors = course.find("div", "c-courseList-entry-instructor").find_all('a')
+    # print author
+    author_list = []
+    for author in authors: 
+        author = author.get_text()
+        author_list.append(author)
+    print organization, "+", title, "+", author_list
+    new_course = Course(organization, title, author)
 
-            # define processors
-            loader.default_input_processor = MapCompose(unicode.strip)
-            loader.default_output_processor = Join()
-
-            # iterate over fields and add xpaths to the loader
-            for field, xpath in self.item_fields.iteritems():
-                loader.add_xpath(field, xpath)
-            yield loader.load_item()
+    new_titles.append(new_course)  #FIXME save to DB

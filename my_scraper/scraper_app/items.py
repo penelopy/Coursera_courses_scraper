@@ -1,13 +1,12 @@
 #! -*- coding: utf-8 -*-
 
-from scrapy.item import Item, Field
 
 
-class Course(Item):
-    """Coursera course container (dictionary-like object) for scraped data"""
-    organization = Field()   
-    title = Field()
-    author = Field()
-    start_date = Field()
-    duration = Field()
+class Course():
+    def __init__(self, organization, title, author):
+        self.organization = organization
+        self.title = title
+        self.author = author
+        # self.start_date = start_date
+        # self.duration = duration
 

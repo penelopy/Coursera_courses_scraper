@@ -32,3 +32,5 @@ class Courses(DeclarativeBase):
     author = Column('author', String)
     start_date = Column('start_date', String)
     duration = Column('duration', String)
+
+#create authors table for many to one relationship with Courses
