@@ -22,6 +22,7 @@ class Courses(DeclarativeBase):
 class Authors(DeclarativeBase):
     __tablename__ = "authors"
     id = Column(Integer, primary_key=True)
+    author_name = Column('author_name', String)
     course_title = Column('course_title', String)
 
 authors_courses = Table('authors_courses', DeclarativeBase.metadata, 
