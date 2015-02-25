@@ -36,18 +36,11 @@ def scrape_data_from_coursera(url):
 
 def parse_data(course_blocks):
     # Extract data from BS4 instance and save to data structure
-    # print "----------------"
-    # print course_blocks
-    # print "----------------"
     
     course_objects_list = []
     for course in course_blocks: 
         try:
-            # print "----------------"
-            # print course.find("div", "c-courseList-entry-university").find('a').get_text()
-            # print "----------------"
             organization = unicode(course.find("div", "c-courseList-entry-university").find('a').get_text())
-            # print organization
         except None:
             organization = "Not Listed"
         try: 
@@ -97,7 +90,6 @@ def parse_data(course_blocks):
 
             new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
             course_objects_list.append(new_course)
-            print new_course.title
     return course_objects_list
  
 def save_output_to_txt_file(course_objects_list):

@@ -9,12 +9,10 @@ import csv
 import models
 import codecs
 from sqlalchemy.orm import sessionmaker
-
-
+import os
 import unittest
 from models import Courses #or import from item? 
 import coursera_spider
- 
 
 
 class Tests_for_Coursera_project(unittest.TestCase):
@@ -34,36 +32,14 @@ class Tests_for_Coursera_project(unittest.TestCase):
 
         result = coursera_spider.save_output_to_txt_file(course_objects_list)
         self.assertEqual(expected_result, result)
-##########################
-    def test_parse_data(self):
 
-    # browser.get('file:///Users/penelopehill/Desktop/test1.html')
-
-        course_objects_list = []
-        new_course_1 = Course(
-            'University of Maryland, College Park',
-            'Developing Innovative Ideas for New Companies: The First Step in Entrepreneurship',
-            'Dr. James V. Green',
-            'Feb 23rd, 2015',
-            '4 weeks long',
-            'Not Listed')
-        new_course_2 = Course(
-            'University of California, San Diego',
-            'Learning How to Learn: Powerful mental tools to help you master tough subjects',
-            'Dr. Barbara Oakley, Dr. Terrence Sejnowski',
-            'Not Listed',
-            'Not Listed',
-            'Go at your own pace.')
-        course_objects_list.append(new_course_1)
-        # course_objects_list.append(new_course_2)
-        expected_result = course_objects_list
-        print expected_result
-
-        # self.assertEqual(expected_result, result)
-
-        course_blocks = [r'<div class="c-courseList-entry-university"><a data-id="32" data-js="partner-link" href="/umd">University of Maryland, College Park</a>']
-        result = coursera_spider.parse_data(course_blocks)
-
+    def test_scrape_data_from_coursera(self): 
+        # url = os.path.join(os.path.dirname(__file__), 'test_course_blocks.html')
+        # print url
+        url = './test_course_blocks.html'
+        course_block = coursera_spider.scrape_data_from_coursera(url)
+        result = unicode(course_block[0].find("div", "c-courseList-entry-university").find('a').get_text())
+        expected_result = "University of Maryland, College Park"
         self.assertEqual(expected_result, result)
 
 
