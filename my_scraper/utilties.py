@@ -28,14 +28,11 @@ def parse_date_fields(input_string):
     matches = re.search(all_regex, input_string)
     return matches
 
-# input_string = '<p>Jan 23rd, 2015<br>6 weeks long</br></p>'
-# matches = parse_date_fields(input_string)
-
-
 def clean_date_data(matches):    
     try: 
         month_num_text = matches.group('three_char_month')
-        date_dic = {"Jan":1, "Feb": 2, "Mar":3, "Apr":4, "May":5, "Jun":6, "Jul":7, "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+        date_dic = {"Jan":1, "Feb": 2, "Mar":3, "Apr":4, "May":5, "Jun":6, 
+            "Jul":7, "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
         month_num = date_dic.get(month_num_text)
         day_num = matches.group('day_num')
         year= matches.group('four_dig_year')
@@ -44,16 +41,6 @@ def clean_date_data(matches):
     except: 
         course_begins = None
         duration = None
-    # try:
-    #     day_num = matches.group('day_num')
-    # except:
-    #     course_begins = None
-    #     year= matches.group('four_dig_year')
-    #     course_begins = None
-    #     duration= matches.group('alt_text')
-    #     course_begins = None
-    #     course_begins = date(int(year),int(month_num),int(day_num))
-    
     return course_begins, duration
 
 

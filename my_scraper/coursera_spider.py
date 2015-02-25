@@ -6,12 +6,11 @@ from items import Course
 from datetime import datetime, date
 import models
 import codecs
-# from sqlalchemy.orm import sessionmaker
 import utilties
 
 
 def scrape_data_from_coursera(): 
-    # Locates "Load more courses" links and scrapes complete list of courses
+    # Locates "Load more courses" links and scrapes complete list of courses once all courses are loaded
     more_content = True
 
     browser = webdriver.Firefox()
@@ -19,13 +18,13 @@ def scrape_data_from_coursera():
 
     time.sleep(10)
 
-    while more_content:
-        try:
-            load_more = browser.find_element_by_xpath("//a[@href='#']")
-            load_more.click()
-            continue
-        except ElementNotVisibleException:
-            more_content = False
+    # while more_content:
+    #     try:
+    #         load_more = browser.find_element_by_xpath("//a[@href='#']")
+    #         load_more.click()
+    #         continue
+    #     except ElementNotVisibleException:
+            # more_content = False
 
     elem = browser.find_element_by_xpath("//*")
     content = elem.get_attribute("innerHTML")
@@ -37,16 +36,17 @@ def scrape_data_from_coursera():
     return course_blocks
 
 def parse_data(course_blocks):
+    # Extract data from BS4 instance and save to data structure
     course_objects_list = []
     for course in course_blocks: 
         try:
-            organization = course.find("div", "c-courseList-entry-university").find('a').get_text()
+            organization = unicode(course.find("div", "c-courseList-entry-university").find('a').get_text())
         except None:
-            organization = None
+            organization = "Not Listed"
         try: 
-            title = course.find("div", "c-courseList-entry-title").find('a').get_text()
+            title = unicode(course.find("div", "c-courseList-entry-title").find('a').get_text())
         except None: 
-            title = None
+            title = "Not Listed"
         try: 
             start_dates = course.find("div", "bt3-col-xs-3 bt3-text-right").find_all('p')
         except:
@@ -55,54 +55,39 @@ def parse_data(course_blocks):
             authors = course.find("div", "c-courseList-entry-instructor").find_all('a')
         except AttributeError:
             author = None
+         # Save each author to authors table in Postgres   
         all_authors = ""
         if len(authors) > 1: 
             for author in authors: 
                 author = author.get_text()
-                #save each author individually to author database table
+                # Save each author individually to author database table
                 new_author = models.Authors(author_name = author, course_title = title)
                 models.db_session.add(new_author)
                 models.db_session.commit()
-                #save author to author string for text file
+                # Create text string of authors to include in text file
                 all_authors += author + ", "
-            all_authors = all_authors[:-2]
-
+            print all_authors  
         elif len(authors) == 1:
             all_authors = authors[0].get_text()
 
-        # process and parse date, duration and course note information
-        for a_date in start_dates:
-            a_date = str(a_date)
+        # Process and parse date, duration and course note information
+        for start_date in start_dates:
+            start_date = str(start_date)
             duration = None
             course_begins = None
             course_notes = None
-            if "Go at your own pace." in a_date: 
+            if "Go at your own pace." in start_date: 
                 course_notes = "Go at your own pace."
-            elif "There are no open sessions." in a_date:
+            elif "There are no open sessions." in start_date:
                 course_notes = "There are no open sessions."
             else: 
-                matches = utilties.parse_date_fields(a_date)
-                course_begins, duration = utilties.clean_date_data(matches) #this will return course_begins and duration
-            try: 
-                organization = unicode(organization)
-            except None: 
-                organization = "Not listed"
-            try: 
-                title = unicode(title)
-            except None: 
-                title = "Not listed"
-            try:
+                matches = utilties.parse_date_fields(start_date)
+                course_begins, duration = utilties.clean_date_data(matches) 
                 duration = unicode(duration)
-            except None: 
-                duration = "Not listed"
             try: 
                 course_notes = unicode(course_notes)
             except: 
                 course_notes = "Not listed"
-            try: 
-                course_begins
-            except None: 
-                course_begins = None
 
             new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
             course_objects_list.append(new_course)
@@ -110,6 +95,7 @@ def parse_data(course_blocks):
     return course_objects_list
  
 def save_output_to_txt_file(course_objects_list):
+    # Creates a tab separated file with data on all Coursera courses
     with codecs.open('complete_course_list.txt', 'w', encoding="utf-8") as f:
 
         for course in course_objects_list: 
@@ -127,6 +113,7 @@ def save_output_to_txt_file(course_objects_list):
         return formatted_output
 
 def upload_data_to_postgres(course_objects_list):
+    # Insert course data into Postgres
     for course in course_objects_list:
 
         newcourse = models.Courses(organization=course.organization, 
