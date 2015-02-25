@@ -92,9 +92,9 @@ def parse_data(course_blocks):
             course_objects_list.append(new_course)
     return course_objects_list
  
-def save_output_to_txt_file(course_objects_list):
+def save_output_to_txt_file(course_objects_list, output_filename):
     # Creates a tab separated file with data on all Coursera courses
-    with codecs.open('complete_course_list.txt', 'w', encoding="utf-8") as f:
+    with codecs.open(output_filename, 'w', encoding="utf-8") as f:
 
         for course in course_objects_list: 
             course_items = []
@@ -106,7 +106,7 @@ def save_output_to_txt_file(course_objects_list):
             course_items.append(course.duration)
             course_items.append(course.course_notes)
             f.write('%s' % ('\t'.join(course_items) + '\n'))
-            #used in tests.py
+            # Used in tests.py
             formatted_output = ('%s' % ('\t'.join(course_items) + '\n')) 
         return formatted_output
 
@@ -129,7 +129,7 @@ def main():
     url = 'https://www.coursera.org/courses?languages=en'
     course_data = scrape_data_from_coursera(url)
     course_objects_list = parse_data(course_data)
-    # save_output_to_txt_file(course_objects_list)
+    save_output_to_txt_file(course_objects_list, 'complete_course_list.txt')
     # upload_data_to_postgres(course_objects_list)
 
 if __name__ == "__main__": 
