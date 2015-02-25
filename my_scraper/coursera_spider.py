@@ -3,12 +3,11 @@ from bs4 import BeautifulSoup
 from selenium.common.exceptions import ElementNotVisibleException
 import time
 from items import Course
-import string
 from datetime import datetime, date
-import csv
 import models
 import codecs
 from sqlalchemy.orm import sessionmaker
+import utilties
 
 
 def scrape_data_from_coursera(): 
@@ -40,7 +39,6 @@ def scrape_data_from_coursera():
 def parse_data(course_blocks):
     course_objects_list = []
     for course in course_blocks: 
-        # print course
         try:
             organization = course.find("div", "c-courseList-entry-university").find('a').get_text()
         except None:
@@ -51,7 +49,6 @@ def parse_data(course_blocks):
             title = None
         try: 
             start_dates = course.find("div", "bt3-col-xs-3 bt3-text-right").find_all('p')
-            print start_dates
         except:
             start_dates = None
         try: 
@@ -75,37 +72,46 @@ def parse_data(course_blocks):
 
         # process and parse date, duration and course note information
         for a_date in start_dates:
-            print a_date
-            date = str(a_date)
-            if date[3] == "c":
-                coursex = string.replace(date, '<p class="c-courseList-entry-tagline">', "")
-                coursey = string.replace(coursex, '<p class="c-courseList-entry-noOpenSessions">', "")
-                course_notes = string.replace(coursey, '</p>', "")
-                course_begins = None
-                duration = None
+            a_date = str(a_date)
+            duration = None
+            course_begins = None
+            course_notes = None
+            if "Go at your own pace." in a_date: 
+                course_notes = "Go at your own pace."
+                # course_begins = None
+            elif "There are no open sessions." in a_date:
+                course_notes = "There are no open sessions."
+                # course_begins = None
             else: 
-                x_date = string.replace(date, "<p>", "")
-                y_date = string.replace(x_date, "</p>", "")
-                date_duration_list = y_date.split("<br/>")
-                if len(date_duration_list) == 2: 
-                    duration = date_duration_list[1]
-                    course_begins = clean_date_data(date_duration_list[0])
-                    course_notes = "Not Listed"
-                else: 
-                    # print date_duration_list[0]
-                    course_begins = clean_date_data(date_duration_list[0])
-                    duration = "Not Listed"
-                    course_notes = "Not Listed"
+                matches = utilties.parse_date_fields(a_date)
+                course_begins, duration = utilties.clean_date_data(matches) #this will return course_begins and duration
+            try: 
+                organization = unicode(organization)
+            except None: 
+                organization = "Not listed"
+            try: 
+                title = unicode(title)
+            except None: 
+                title = "Not listed"
+            try:
+                duration = unicode(duration)
+            except None: 
+                duration = "Not listed"
+            try: 
+                course_notes = unicode(course_notes)
+            except: 
+                course_notes = "Not listed"
+            try: 
+                course_begins
+            except None: 
+                course_begins = None
 
-            organization = unicode(organization)
-            title = unicode(title)
-            duration = unicode(duration)
-            course_notes = unicode(course_notes)
+            new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
+            course_objects_list.append(new_course)
+            print new_course.organization, "+", new_course.title, "+", new_course.course_notes, "+", new_course.duration, "+", new_course.start_date
 
-    #         new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
-    #         course_objects_list.append(new_course)
 
-    # return course_objects_list
+    return course_objects_list
  
 def save_output_to_txt_file(course_objects_list):
     with codecs.open('complete_course_list.txt', 'w', encoding="utf-8") as f:
@@ -137,17 +143,7 @@ def upload_data_to_postgres(course_objects_list):
         models.db_session.add(newcourse)
     models.db_session.commit()
 
-def clean_date_data(date_list):
-    for date_string in date_list: 
-        date_length = len(date_string)
-        print date_length
-    date_dic = {"Jan":1, "Feb": 2, "Mar":3, "Apr":4, "May":5, "Jun":6, "Jul":7, "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
-    month_num = date_dic.get(date_string[0:3])
-    day_num = date_string[4]
-    year = date_string[-4:]
 
-    class_date = date(int(year),int(month_num),int(day_num))
-    return class_date
 
 def main():
     course_data = scrape_data_from_coursera()
