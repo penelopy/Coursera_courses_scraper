@@ -6,12 +6,12 @@ from items import Course
 from datetime import datetime, date
 import models
 import codecs
-from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.orm import sessionmaker
 import utilties
 
 
 def scrape_data_from_coursera(): 
-    #locates "Load more courses" links and scrapes complete list of courses
+    # Locates "Load more courses" links and scrapes complete list of courses
     more_content = True
 
     browser = webdriver.Firefox()
@@ -78,10 +78,8 @@ def parse_data(course_blocks):
             course_notes = None
             if "Go at your own pace." in a_date: 
                 course_notes = "Go at your own pace."
-                # course_begins = None
             elif "There are no open sessions." in a_date:
                 course_notes = "There are no open sessions."
-                # course_begins = None
             else: 
                 matches = utilties.parse_date_fields(a_date)
                 course_begins, duration = utilties.clean_date_data(matches) #this will return course_begins and duration
@@ -108,8 +106,6 @@ def parse_data(course_blocks):
 
             new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
             course_objects_list.append(new_course)
-            print new_course.organization, "+", new_course.title, "+", new_course.course_notes, "+", new_course.duration, "+", new_course.start_date
-
 
     return course_objects_list
  
@@ -144,11 +140,10 @@ def upload_data_to_postgres(course_objects_list):
     models.db_session.commit()
 
 
-
 def main():
     course_data = scrape_data_from_coursera()
     course_objects_list = parse_data(course_data)
-    save_output_to_txt_file(course_objects_list)
+    # save_output_to_txt_file(course_objects_list)
     # upload_data_to_postgres(course_objects_list)
 
 if __name__ == "__main__": 

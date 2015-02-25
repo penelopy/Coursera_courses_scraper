@@ -46,15 +46,15 @@ University of Maryland, College Park	New Venture Finance: Startup Funding for En
 Rice University	An Introduction to Interactive Programming in Python (Part 2)	Joe Warren, Scott Rixner, John Greiner, Stephen Wong	2015-03-27	4 weeks long	None
 University of Pennsylvania	Vital Signs: Understanding What the Body Is Telling Us	Connie B. Scanga, PhD	2015-03-16	6 weeks long	None
 University of New Mexico	Web Application Architectures	Greg Heileman	2015-03-16	6 weeks long	None
-University of California, Irvine	The Power of Microeconomics: Economic Principles in the Real World	Dr. Peter Navarro	None	None	Go at your own pace.
-University of California, Irvine	The Power of Macroeconomics: Economic Principles in the Real World	Dr. Peter Navarro	None	None	Go at your own pace.
-University of Minnesota	Introduction to Recommender Systems	Joseph A Konstan, Michael D Ekstrand	None	None	Go at your own pace.
 École Polytechnique Fédérale de Lausanne	L'Art des Structures 2 : treillis, poutres, dalles et cadres	Olivier L. Burdet	2015-02-13	11 weeks long	None
 École Polytechnique Fédérale de Lausanne	Éléments de Géomatique	Pierre-Yves Gilliéron, Mr. Bertrand Merminod	2015-02-16	8 weeks long	None
 University of Wisconsin–Madison	Changing Weather and Climate in the Great Lakes Region	Steven Ackerman, Margaret Mooney	2015-02-23	4 weeks long	None
 Ludwig-Maximilians-Universität München (LMU)	Theatre and Globalization	Christopher Balme	2015-02-16	6 weeks long	None
 École Polytechnique Fédérale de Lausanne	Introduction à la programmation orientée objet (en C++)	Jamila Sam, Jean-Cédric Chappelier	2015-02-23	7 weeks long	None
 École Polytechnique Fédérale de Lausanne	Villes africaines: Introduction à la planification urbaine / African cities : an introduction to urban planning	Jérôme Chenal	2015-02-16	12 weeks long	None
+University of California, Irvine	The Power of Microeconomics: Economic Principles in the Real World	Dr. Peter Navarro	None	None	Go at your own pace.
+University of California, Irvine	The Power of Macroeconomics: Economic Principles in the Real World	Dr. Peter Navarro	None	None	Go at your own pace.
+University of Minnesota	Introduction to Recommender Systems	Joseph A Konstan, Michael D Ekstrand	None	None	Go at your own pace.
 Johns Hopkins University	Chemicals and Health	Dr. Megan Weil Latshaw, PhD, Beth A. Resnick, MPH	2015-03-09	6 weeks long	None
 UNSW Australia (The University of New South Wales)	Introduction to Systems Engineering	Dr Mike Ryan, Dr Ian  Faulconbridge 	2015-03-02	9 weeks long	None
 Icahn School of Medicine at Mount Sinai	Dynamical Modeling Methods for Systems Biology	Eric Sobie, PhD	2015-03-02	7 weeks long	None
@@ -140,8 +140,8 @@ University of Virginia	Age of Jefferson	Professor Peter S. Onuf	None	None	Go at 
 Columbia University	Financial Engineering and Risk Management Part II	Martin Haugh, Garud Iyengar	None	None	Go at your own pace.
 The Museum of Modern Art	Art and Inquiry: Museum Teaching Strategies For Your Classroom 	Lisa Mazzola	None	None	Go at your own pace.
 University of Virginia	New Models of Business in Society	R. Edward Freeman  	None	None	Go at your own pace.
-University of Virginia	The Kennedy Half Century	Professor Larry J. Sabato  	None	None	Go at your own pace.
 Wesleyan University	Property and Liability: An Introduction to Law and Economics	Richard Adelstein	None	None	Go at your own pace.
+University of Virginia	The Kennedy Half Century	Professor Larry J. Sabato  	None	None	Go at your own pace.
 New Teacher Center	Common Core in Action: Math Classroom Challenges- Using Formative Assessment to Guide Instruction	Kevin Drinkard	2015-03-30	6 weeks long	None
 Commonwealth Education Trust	Foundations of Teaching for Learning 8: Developing Relationships	Professor Tony Townsend, Professor John MacBeath, Dr Fawaz Shareef	2015-05-11	6 weeks long	None
 University of Michigan	Model Thinking	Scott E. Page	2015-06-01	10 weeks long	None
