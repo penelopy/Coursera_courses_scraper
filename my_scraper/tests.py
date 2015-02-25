@@ -1,19 +1,7 @@
-from selenium import webdriver
-from bs4 import BeautifulSoup
-from selenium.common.exceptions import ElementNotVisibleException
-import time
 from items import Course
-import string
-from datetime import datetime, date
-import csv
-import models
-import codecs
-from sqlalchemy.orm import sessionmaker
 import os
 import unittest
-from models import Courses #or import from item? 
 import coursera_spider
-
 
 class Tests_for_Coursera_project(unittest.TestCase):
     # Validates that the content of a dummy html file is correctly captured by Beautiful Soup.
@@ -44,7 +32,6 @@ class Tests_for_Coursera_project(unittest.TestCase):
         output_filename = 'test_course_listing.txt'
         result = coursera_spider.save_output_to_txt_file(course_objects_list, output_filename)
         self.assertEqual(expected_result, result)
-
 
 if __name__ == '__main__':
     unittest.main()

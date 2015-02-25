@@ -17,13 +17,13 @@ def scrape_data_from_coursera(url):
 
     time.sleep(10)
 
-    # while more_content:
-    #     try:
-    #         load_more = browser.find_element_by_xpath("//a[@href='#']")
-    #         load_more.click()
-    #         continue
-    #     except ElementNotVisibleException:
-            # more_content = False
+    while more_content:
+        try:
+            load_more = browser.find_element_by_xpath("//a[@href='#']")
+            load_more.click()
+            continue
+        except ElementNotVisibleException:
+            more_content = False
 
     elem = browser.find_element_by_xpath("//*")
     content = elem.get_attribute("innerHTML")
@@ -106,7 +106,7 @@ def save_output_to_txt_file(course_objects_list, output_filename):
             course_items.append(course.duration)
             course_items.append(course.course_notes)
             f.write('%s' % ('\t'.join(course_items) + '\n'))
-            # Used in tests.py
+            # The line below is only required one of the unit tests and not by the main program
             formatted_output = ('%s' % ('\t'.join(course_items) + '\n')) 
         return formatted_output
 
@@ -115,22 +115,21 @@ def upload_data_to_postgres(course_objects_list):
     for course in course_objects_list:
 
         newcourse = models.Courses(organization=course.organization, 
-                        course_title=course.title,
-                        authors=course.all_authors,
-                        start_date=course.start_date,
-                        duration=course.duration,
-                        course_notes=course.course_notes)
+                                    course_title=course.title,
+                                    authors=course.all_authors,
+                                    start_date=course.start_date,
+                                    duration=course.duration,
+                                    course_notes=course.course_notes)
 
         models.db_session.add(newcourse)
     models.db_session.commit()
-
 
 def main():
     url = 'https://www.coursera.org/courses?languages=en'
     course_data = scrape_data_from_coursera(url)
     course_objects_list = parse_data(course_data)
     save_output_to_txt_file(course_objects_list, 'complete_course_list.txt')
-    # upload_data_to_postgres(course_objects_list)
+    upload_data_to_postgres(course_objects_list)
 
 if __name__ == "__main__": 
     main()
