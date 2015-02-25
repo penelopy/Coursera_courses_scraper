@@ -8,13 +8,12 @@ import models
 import codecs
 import utilties
 
-
-def scrape_data_from_coursera(): 
+def scrape_data_from_coursera(url): 
     # Locates "Load more courses" links and scrapes complete list of courses once all courses are loaded
     more_content = True
 
     browser = webdriver.Firefox()
-    browser.get('https://www.coursera.org/courses?languages=en')
+    browser.get(url)
 
     time.sleep(10)
 
@@ -37,10 +36,18 @@ def scrape_data_from_coursera():
 
 def parse_data(course_blocks):
     # Extract data from BS4 instance and save to data structure
+    # print "----------------"
+    # print course_blocks
+    # print "----------------"
+    
     course_objects_list = []
     for course in course_blocks: 
         try:
+            # print "----------------"
+            # print course.find("div", "c-courseList-entry-university").find('a').get_text()
+            # print "----------------"
             organization = unicode(course.find("div", "c-courseList-entry-university").find('a').get_text())
+            # print organization
         except None:
             organization = "Not Listed"
         try: 
@@ -66,7 +73,6 @@ def parse_data(course_blocks):
                 models.db_session.commit()
                 # Create text string of authors to include in text file
                 all_authors += author + ", "
-            print all_authors  
         elif len(authors) == 1:
             all_authors = authors[0].get_text()
 
@@ -91,7 +97,7 @@ def parse_data(course_blocks):
 
             new_course = Course(organization, title, all_authors, course_begins, duration, course_notes)
             course_objects_list.append(new_course)
-
+            print new_course.title
     return course_objects_list
  
 def save_output_to_txt_file(course_objects_list):
@@ -128,7 +134,8 @@ def upload_data_to_postgres(course_objects_list):
 
 
 def main():
-    course_data = scrape_data_from_coursera()
+    url = 'https://www.coursera.org/courses?languages=en'
+    course_data = scrape_data_from_coursera(url)
     course_objects_list = parse_data(course_data)
     # save_output_to_txt_file(course_objects_list)
     # upload_data_to_postgres(course_objects_list)

@@ -1,7 +1,5 @@
 #! -*- coding: utf-8 -*-
 
-
-
 class Course():
     def __init__(self, organization, title, all_authors, start_date, duration, course_notes):
         self.organization = organization
