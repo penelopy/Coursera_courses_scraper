@@ -1,9 +1,7 @@
-
 from sqlalchemy import create_engine, Column, Integer, String, Date, Table, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
-
 
 DeclarativeBase = declarative_base()
 ENGINE = None
@@ -43,7 +41,6 @@ db_session = connect()
 def main():
     connect()
     DeclarativeBase.metadata.create_all(ENGINE)
-
 
 if __name__ == "__main__":
     main()

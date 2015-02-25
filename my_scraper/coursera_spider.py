@@ -11,10 +11,8 @@ import utilties
 def scrape_data_from_coursera(url): 
     # Locates "Load more courses" links and scrapes complete list of courses once all courses are loaded
     more_content = True
-
     browser = webdriver.Firefox()
     browser.get(url)
-
     time.sleep(10)
 
     while more_content:
@@ -28,7 +26,6 @@ def scrape_data_from_coursera(url):
     elem = browser.find_element_by_xpath("//*")
     content = elem.get_attribute("innerHTML")
     soup = BeautifulSoup(content)  
-
     browser.quit()
 
     course_blocks = soup.find_all("div", "c-courseList-entry")
@@ -129,7 +126,7 @@ def main():
     course_data = scrape_data_from_coursera(url)
     course_objects_list = parse_data(course_data)
     save_output_to_txt_file(course_objects_list, 'complete_course_list.txt')
-    upload_data_to_postgres(course_objects_list)
+    # upload_data_to_postgres(course_objects_list)
 
 if __name__ == "__main__": 
     main()
